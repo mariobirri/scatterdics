@@ -7,9 +7,9 @@ ser = serial.Serial('/dev/ttyAMA0', 115200, timeout=5)	#open serial port for com
 prefix = 'X05LA-ES-SCATTERDISC:ROT.'
 pvdb = {
     'VAL' : {
-        'TYPE': 'int'
-    },'RBV':{
-'TYPE':'float'
+	'TYPE': 'int'
+    },'RBV': {
+	'TYPE':'float'
     },
 }
 
