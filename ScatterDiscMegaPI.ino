@@ -106,7 +106,7 @@ int16_t servo_pins[12]={0,0,0,0,0,0,0,0,0,0,0,0};
 int16_t moveSpeed = 180;
 int16_t turnSpeed = 180;
 int16_t minSpeed = 45;
-int16_t factor = 23;
+int16_t factor = 1; //23
 int16_t distance=0;
 int16_t randnum = 0;                                                                               
 int16_t LineFollowFlag=0;
@@ -2790,29 +2790,29 @@ void setup()
     encoders[i].reset(i+1);
   }
   attachInterrupt(encoders[0].getIntNum(), isr_process_encoder1, RISING);
-  attachInterrupt(encoders[1].getIntNum(), isr_process_encoder2, RISING);
-  attachInterrupt(encoders[2].getIntNum(), isr_process_encoder3, RISING);
-  attachInterrupt(encoders[3].getIntNum(), isr_process_encoder4, RISING);
-  delay(5);
-  gyro_ext.begin();
-  delay(5);
+  //attachInterrupt(encoders[1].getIntNum(), isr_process_encoder2, RISING);
+ // attachInterrupt(encoders[2].getIntNum(), isr_process_encoder3, RISING);
+  //attachInterrupt(encoders[3].getIntNum(), isr_process_encoder4, RISING);
+  //delay(5);
+  //gyro_ext.begin();
+  //delay(5);
   pinMode(13,OUTPUT);
 
   //Set Pwm 970Hz
   TCCR1A = _BV(WGM10);
   TCCR1B = _BV(CS11) | _BV(CS10) | _BV(WGM12);
-  //TCCR2A = _BV(WGM21) | _BV(WGM20);
-  //TCCR2B = _BV(CS22);
-  //TCCR3A = _BV(WGM30);
-  //TCCR3B = _BV(CS31) | _BV(CS30) | _BV(WGM32);
-  //TCCR4A = _BV(WGM40);
-  //TCCR4B = _BV(CS41) | _BV(CS40) | _BV(WGM42);
+  TCCR2A = _BV(WGM21) | _BV(WGM20);
+  TCCR2B = _BV(CS22);
+  TCCR3A = _BV(WGM30);
+  TCCR3B = _BV(CS31) | _BV(CS30) | _BV(WGM32);
+  TCCR4A = _BV(WGM40);
+  TCCR4B = _BV(CS41) | _BV(CS40) | _BV(WGM42);
 
-  for(int i=0;i<4;i++)
+  for(int i=0;i<1;i++)
   {
     encoders[i].setPulse(10);
     encoders[i].setRatio(6.6);
-    encoders[i].setPosPid(1.8,0,1.2);
+    encoders[i].setPosPid(0.1,0,0);
     encoders[i].setSpeedPid(0.05, 100, 0);
     encoders[i].setMotionMode(DIRECT_MODE);
   }
@@ -2829,9 +2829,9 @@ void setup()
   //megapi_mode = BALANCED_MODE;
   Serial.print("Version: ");
   Serial.println(mVersion);
-  update_sensor = lasttime_speed = lasttime_angle = millis();
+  //update_sensor = lasttime_speed = lasttime_angle = millis();
   blink_time = millis();
-  BluetoothSource = DATA_SERIAL;
+  //BluetoothSource = DATA_SERIAL;
 }
 
 /**
@@ -2851,7 +2851,7 @@ void setup()
 void loop()
 {
   currentTime = millis()/1000.0-lastTime;
-  keyPressed = buttonSensor.pressed();
+ // keyPressed = buttonSensor.pressed();
 
   if(millis() - blink_time > 1000)
   {
@@ -2860,14 +2860,14 @@ void loop()
     digitalWrite(13,blink_flag);
   }
 
-  if(ir != NULL)
-  {
-    IrProcess();
-  }
+  //if(ir != NULL)
+  //{
+    //IrProcess();
+  //}
 
-  for(int i=0;i<4;i++)
+  for(int i=0;i<1;i++)
   {
-    steppers[i].update();
+    //steppers[i].update();
     encoders[i].loop();
   }
 
@@ -2927,30 +2927,30 @@ void loop()
     readSerial();
   }
 
-  if(Compass.getPort() != 0)
-  {
-    Compass.getAngle();
-  }
-  angle_speed = gyro_ext.getGyroY();
-  if(megapi_mode == BLUETOOTH_MODE)
-  {
-    if(millis() - update_sensor > 10)
-    {
-      update_sensor = millis();
-      gyro_ext.fast_update();
-    }
-  }
-  else if(megapi_mode == AUTOMATIC_OBSTACLE_AVOIDANCE_MODE)
-  { 
-    ultrCarProcess();
-  }
-  else if(megapi_mode == BALANCED_MODE)
-  {
-    gyro_ext.fast_update();
-    balanced_model();
-  }
-  else if(megapi_mode == LINE_FOLLOW_MODE)
-  {
-    line_model();
-  }
+//  if(Compass.getPort() != 0)
+//  {
+//    Compass.getAngle();
+//  }
+//  angle_speed = gyro_ext.getGyroY();
+//  if(megapi_mode == BLUETOOTH_MODE)
+//  {
+//    if(millis() - update_sensor > 10)
+//    {
+//      update_sensor = millis();
+//      gyro_ext.fast_update();
+//    }
+//  }
+//  else if(megapi_mode == AUTOMATIC_OBSTACLE_AVOIDANCE_MODE)
+//  { 
+//    ultrCarProcess();
+//  }
+//  else if(megapi_mode == BALANCED_MODE)
+//  {
+//    gyro_ext.fast_update();
+//    balanced_model();
+//  }
+//  else if(megapi_mode == LINE_FOLLOW_MODE)
+//  {
+//    line_model();
+//  }
 }
